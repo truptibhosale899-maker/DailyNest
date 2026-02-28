@@ -205,7 +205,10 @@ def run_bot():
         return "✅ Bot ran successfully! Check your Telegram!"
     except Exception as e:
         return f"❌ Bot failed: {str(e)}", 500
-
+        @app.route("/init-db")
+def initialize_db():
+    init_db()
+    return "✅ Database initialized!"
 if __name__ == "__main__":
     init_db()
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
