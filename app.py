@@ -197,7 +197,7 @@ def api_news(category):
 def run_bot():
     try:
         import asyncio
-        from news_bot import broadcast_news
+        from bot.news_bot import broadcast_news
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         loop.run_until_complete(broadcast_news())
