@@ -193,6 +193,19 @@ def api_news(category):
     articles = fetch_news(category=category, page_size=5)
     return jsonify([{"title": a.get("title", ""), "description": a.get("description", ""), "url": a.get("url", ""), "source": a.get("source", {}).get("name", "")} for a in articles])
 
+@app.route("/run-bot")
+def run_bot():
+    try:
+        import asyncio
+        from news_bot import broadcast_news
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(broadcast_news())
+        loop.close()
+        return "✅ Bot ran successfully! Check your Telegram!"
+    except Exception as e:
+        return f"❌ Bot failed: {str(e)}", 500
+
 if __name__ == "__main__":
     init_db()
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
