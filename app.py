@@ -1,6 +1,3 @@
-"""
-DailyNest – Main Flask Application
-"""
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 import hashlib
 import requests
@@ -16,7 +13,6 @@ app.secret_key = "dailynest_secret_key_2025"
 NEWS_API_KEY = os.environ.get("NEWS_API_KEY", "")
 NEWS_API_URL = "https://newsapi.org/v2/"
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
-
 CATEGORIES = ["technology", "sports", "business", "entertainment", "health", "science", "general"]
 
 def get_db():
@@ -37,7 +33,7 @@ def init_db():
     """)
     conn.commit()
     conn.close()
-   print("Database initialised successfully.")
+    print("Database initialised successfully.")
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -200,16 +196,3 @@ def api_news(category):
 if __name__ == "__main__":
     init_db()
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
-```
-
-6. Scroll down and click **"Commit changes"** ✅
-
----
-
-Also make sure your `requirements.txt` has this:
-```
-Flask==3.0.3
-requests==2.32.3
-python-telegram-bot==21.3
-Werkzeug==3.0.3
-psycopg2-binary==2.9.9
