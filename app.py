@@ -10,9 +10,8 @@ import os
 from datetime import datetime
 from functools import wraps
 
-import psycopg
-import psycopg.errors
-from psycopg.rows import dict_row
+import psycopg2
+import psycopg2.extras
 
 
 app = Flask(__name__)
