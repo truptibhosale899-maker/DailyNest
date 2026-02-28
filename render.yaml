@@ -1,7 +1,1 @@
-services:
-  - type: web
-    name: dailynest
-    env: python
-    pythonVersion: 3.11.8
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+
