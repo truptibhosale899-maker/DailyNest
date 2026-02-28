@@ -7,7 +7,8 @@ import asyncio
 import requests
 import psycopg2
 import psycopg2.extras
-from telegram import Bot
+from telegram import Bot, Update
+from telegram.ext import Application, CommandHandler, ContextTypes
 from telegram.error import TelegramError
 
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "8528462918:AAE3K7HfmMgW7q28DAKPN83r9P0lVjWcz7I")
@@ -19,7 +20,6 @@ ARTICLES_PER_CATEGORY = 3
 
 def get_users_with_telegram():
     conn = psycopg2.connect(DATABASE_URL)
-    conn.cursor_factory = psycopg2.extras.RealDictCursor
     cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cursor.execute("SELECT username, preferences, telegram_id FROM users WHERE telegram_id != '' AND telegram_id IS NOT NULL")
     users = cursor.fetchall()
@@ -51,6 +51,18 @@ def format_article(article):
     text += f"🔗 [Read more]({url})\n"
     text += f"🏷️ Source: {source}"
     return text
+
+
+async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    await update.message.reply_text(
+        f"🪺 *Welcome to DailyNest Bot!*\n\n"
+        f"Your Telegram Chat ID is:\n"
+        f"`{chat_id}`\n\n"
+        f"Copy this ID and paste it in your DailyNest preferences page to start receiving personalised news!\n\n"
+        f"👉 https://dailynest-iy00.onrender.com/preferences",
+        parse_mode="Markdown"
+    )
 
 
 async def send_news_to_user(bot, user):
@@ -96,10 +108,6 @@ async def send_news_to_user(bot, user):
 async def broadcast_news():
     print("🚀 DailyNest Bot Starting…")
 
-    if TELEGRAM_BOT_TOKEN == "YOUR_TELEGRAM_BOT_TOKEN_HERE":
-        print("⚠️  Please set your TELEGRAM_BOT_TOKEN")
-        return
-
     bot   = Bot(token=TELEGRAM_BOT_TOKEN)
     users = get_users_with_telegram()
 
@@ -116,5 +124,17 @@ async def broadcast_news():
     print("\n✅ Broadcast complete!")
 
 
+def run_listener():
+    """Run the bot in polling mode to listen for /start command."""
+    app = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
+    app.add_handler(CommandHandler("start", start_command))
+    print("👂 Bot is listening for /start commands...")
+    app.run_polling()
+
+
 if __name__ == "__main__":
-    asyncio.run(broadcast_news())
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == "listen":
+        run_listener()
+    else:
+        asyncio.run(broadcast_news())
