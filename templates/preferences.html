@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Preferences{% endblock %}
+
+{% block content %}
+<div class="pref-wrapper">
+    <div class="pref-card">
+        <h1 class="auth-title">Your Preferences</h1>
+        <p class="auth-subtitle">Choose the news categories you care about and optionally connect your Telegram.</p>
+
+        <form method="POST" action="{{ url_for('preferences') }}" class="auth-form">
+
+            <!-- ── CATEGORY SELECTION ─────────── -->
+            <div class="form-group">
+                <label>News Categories <span class="text-muted">(select at least one)</span></label>
+                <div class="cat-grid">
+                    {% set icons = {
+                        'technology':    '💻',
+                        'sports':        '⚽',
+                        'business':      '📈',
+                        'entertainment': '🎬',
+                        'health':        '🏥',
+                        'science':       '🔬',
+                        'general':       '🌍'
+                    } %}
+                    {% for cat in categories %}
+                    <label class="cat-toggle {% if cat in current_prefs %}selected{% endif %}" id="label-{{ cat }}">
+                        <input
+                            type="checkbox"
+                            name="categories"
+                            value="{{ cat }}"
+                            {% if cat in current_prefs %}checked{% endif %}
+                            class="cat-checkbox"
+                            onchange="toggleLabel(this)"
+                        />
+                        <span class="cat-icon">{{ icons.get(cat, '📰') }}</span>
+                        <span>{{ cat | capitalize }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- ── TELEGRAM ───────────────────── -->
+            <div class="form-group">
+                <label for="telegram_id">Telegram Chat ID <span class="text-muted">(optional)</span></label>
+                <div class="input-wrap">
+                    <i data-feather="send" class="input-icon"></i>
+                    <input
+                        type="text"
+                        id="telegram_id"
+                        name="telegram_id"
+                        class="form-control"
+                        value="{{ user.telegram_id or '' }}"
+                        placeholder="e.g. 123456789"
+                    />
+                </div>
+                <small class="help-text">
+                    To find your Telegram ID: message <strong>@userinfobot</strong> on Telegram.
+                    Run the bot script to receive news alerts.
+                </small>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full">Save Preferences</button>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-ghost btn-full mt-sm">Cancel</a>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function toggleLabel(checkbox) {
+        const label = document.getElementById('label-' + checkbox.value);
+        if (checkbox.checked) {
+            label.classList.add('selected');
+        } else {
+            label.classList.remove('selected');
+        }
+    }
+</script>
+{% endblock %}

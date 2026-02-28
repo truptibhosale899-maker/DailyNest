@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}DailyNest{% endblock %} – Your News, Your Way</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<div class="noise"></div>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="{{ url_for('home') }}" class="nav-brand">
+            <span class="brand-icon">🪺</span>
+            <span class="brand-name">Daily<b>Nest</b></span>
+        </a>
+        <div class="nav-links" id="navLinks">
+            <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+            {% for cat in categories[:4] %}
+            <a href="{{ url_for('category', cat=cat) }}" class="nav-link">{{ cat | capitalize }}</a>
+            {% endfor %}
+            <form action="{{ url_for('search') }}" method="GET" class="nav-search">
+                <input type="text" name="q" placeholder="Search news…" class="search-input" />
+                <button type="submit" class="search-btn">🔍</button>
+            </form>
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+                <a href="{{ url_for('preferences') }}" class="nav-link">Preferences</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-sm">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                <a href="{{ url_for('signup') }}" class="btn btn-primary-sm">Sign Up</a>
+            {% endif %}
+        </div>
+        <button class="nav-toggle" id="navToggle">☰</button>
+    </div>
+</nav>
+
+<div class="ticker">
+    <div class="ticker-track">
+        <span class="ticker-item"><span class="ticker-dot"></span>Breaking: Latest headlines from around the world</span>
+        <span class="ticker-item"><span class="ticker-dot"></span>Technology · Sports · Business · Health · Science</span>
+        <span class="ticker-item"><span class="ticker-dot"></span>Personalised news delivered to your Telegram</span>
+        <span class="ticker-item"><span class="ticker-dot"></span>Sign up free to get your personalised feed</span>
+        <span class="ticker-item"><span class="ticker-dot"></span>DailyNest · Your News, Your Way</span>
+        <span class="ticker-item"><span class="ticker-dot"></span>Breaking: Latest headlines from around the world</span>
+        <span class="ticker-item"><span class="ticker-dot"></span>Technology · Sports · Business · Health · Science</span>
+        <span class="ticker-item"><span class="ticker-dot"></span>Personalised news delivered to your Telegram</span>
+        <span class="ticker-item"><span class="ticker-dot"></span>Sign up free to get your personalised feed</span>
+        <span class="ticker-item"><span class="ticker-dot"></span>DailyNest · Your News, Your Way</span>
+    </div>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">
+            {{ message }}
+            <button class="flash-close" onclick="this.parentElement.remove()">×</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<main class="main-content">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <span>🪺</span>
+            <span>DailyNest</span>
+        </div>
+        <p class="footer-tagline">Your personalised news, delivered daily.</p>
+        <div class="footer-cats">
+            {% for cat in categories %}
+            <a href="{{ url_for('category', cat=cat) }}">{{ cat | capitalize }}</a>
+            {% endfor %}
+        </div>
+        <div class="footer-copy">
+            <span class="footer-dev">Developed by Trupti Bhosale</span>
+            <span>BSc Information Technology · Final Year Project · Academic Year 2025–2026</span>
+            <span>© 2025–2026 DailyNest. All rights reserved.</span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const toggle = document.getElementById('navToggle');
+    const links = document.getElementById('navLinks');
+    if (toggle) {
+        toggle.addEventListener('click', () => links.classList.toggle('open'));
+    }
+    setTimeout(() => {
+        document.querySelectorAll('.flash').forEach(el => el.remove());
+    }, 4000);
+</script>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>

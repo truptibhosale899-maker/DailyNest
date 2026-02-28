@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+    <div class="container">
+        <h1>🔍 Search Results</h1>
+        {% if query %}
+            <p>Showing results for: <strong>"{{ query }}"</strong></p>
+        {% else %}
+            <p>Enter a keyword above to search the news.</p>
+        {% endif %}
+
+        <!-- Inline search bar -->
+        <form action="{{ url_for('search') }}" method="GET" class="hero-search mt-sm">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search news…" class="form-control" />
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        {% if articles %}
+        <div class="news-grid">
+            {% for article in articles %}
+            {% include "_article_card.html" %}
+            {% endfor %}
+        </div>
+        {% elif query %}
+        <div class="empty-state">
+            <p>No results found for "{{ query }}". Try a different keyword.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

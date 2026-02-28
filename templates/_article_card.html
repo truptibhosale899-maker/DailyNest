@@ -1,0 +1,21 @@
+<article class="card">
+    <a href="{{ article.url }}" target="_blank" rel="noopener" class="card-img-link">
+        <img
+            src="{{ article.urlToImage or 'https://placehold.co/600x400/7c3aed/ffffff?text=No+Image' }}"
+            alt="{{ article.title }}"
+            class="card-img"
+            onerror="this.src='https://placehold.co/600x400/7c3aed/ffffff?text=No+Image'"
+            loading="lazy"
+        />
+        <span class="card-source">{{ article.source.name }}</span>
+    </a>
+    <div class="card-body">
+        <h3 class="card-title">
+            <a href="{{ article.url }}" target="_blank" rel="noopener">{{ article.title }}</a>
+        </h3>
+        <p class="card-desc">{{ article.description or 'No description available.' }}</p>
+        <a href="{{ article.url }}" target="_blank" rel="noopener" class="card-read-more">
+            Read more <i data-feather="arrow-right"></i>
+        </a>
+    </div>
+</article>

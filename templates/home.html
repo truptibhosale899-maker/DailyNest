@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-eyebrow">📡 Live News · Updated Every Hour</div>
+        <h1 class="hero-title">Stay Informed. <span class="gradient-text">Stay Ahead.</span></h1>
+        <p class="hero-subtitle">DailyNest curates the latest headlines across technology, sports, business and more — all in one beautiful place.</p>
+        {% if not session.get('user_id') %}
+        <div class="hero-actions">
+            <a href="{{ url_for('signup') }}" class="btn btn-primary">Get Started Free →</a>
+            <a href="{{ url_for('login') }}" class="btn btn-ghost">Sign In</a>
+        </div>
+        {% else %}
+        <div class="hero-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">My Dashboard</a>
+            <a href="{{ url_for('preferences') }}" class="btn btn-ghost">Update Preferences</a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="hero-badge-row">
+        <span class="badge">📡 Live News</span>
+        <span class="badge">🔔 Telegram Alerts</span>
+        <span class="badge">🎯 Personalised Feed</span>
+    </div>
+</section>
+
+<section class="section-sm">
+    <div class="container">
+        <div class="pill-row">
+            {% for cat in categories %}
+            <a href="{{ url_for('category', cat=cat) }}" class="pill">{{ cat | capitalize }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">🔥 Trending Now</h2>
+            <a href="{{ url_for('category', cat='general') }}" class="see-all">See all →</a>
+        </div>
+        <div class="news-grid">
+            {% for article in trending %}
+            {% include "_article_card.html" %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">💻 Tech Spotlight</h2>
+            <a href="{{ url_for('category', cat='technology') }}" class="see-all">More tech →</a>
+        </div>
+        <div class="news-grid news-grid-3">
+            {% for article in tech %}
+            {% include "_article_card.html" %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% if not session.get('user_id') %}
+<section class="cta-banner">
+    <div class="container">
+        <h2>Get news <span class="gradient-text">your way.</span></h2>
+        <p>Sign up free and choose the categories that matter to you. Receive updates directly on Telegram.</p>
+        <a href="{{ url_for('signup') }}" class="btn btn-white">Create Free Account</a>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

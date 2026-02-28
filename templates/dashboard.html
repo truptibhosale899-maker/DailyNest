@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- ── DASHBOARD HEADER ────────────────────── -->
+<section class="page-header">
+    <div class="container">
+        <div class="page-header-inner">
+            <div>
+                <h1>👋 Hello, <span class="gradient-text">{{ user.username }}</span></h1>
+                <p>Here's your personalised news feed based on your preferences.</p>
+            </div>
+            <a href="{{ url_for('preferences') }}" class="btn btn-outline">
+                <i data-feather="settings"></i> Edit Preferences
+            </a>
+        </div>
+
+        <!-- Preference chips -->
+        <div class="pref-chips">
+            {% for cat in user.preferences.split(',') %}
+            <a href="{{ url_for('category', cat=cat.strip()) }}" class="chip chip-active">
+                {{ cat.strip() | capitalize }}
+            </a>
+            {% endfor %}
+        </div>
+
+        {% if user.telegram_id %}
+        <p class="telegram-notice">
+            <i data-feather="send"></i> Telegram alerts enabled for ID: <strong>{{ user.telegram_id }}</strong>
+        </p>
+        {% else %}
+        <p class="telegram-notice warn">
+            <i data-feather="alert-circle"></i>
+            No Telegram ID set. <a href="{{ url_for('preferences') }}">Add it in preferences</a> to receive bot alerts.
+        </p>
+        {% endif %}
+    </div>
+</section>
+
+<!-- ── PERSONALISED FEED ───────────────────── -->
+{% for cat, articles in news_by_category.items() %}
+<section class="section {% if loop.index is even %}section-alt{% endif %}">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">{{ cat | capitalize }}</h2>
+            <a href="{{ url_for('category', cat=cat) }}" class="see-all">See all →</a>
+        </div>
+        <div class="news-grid">
+            {% for article in articles %}
+            {% include "_article_card.html" %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endfor %}
+
+{% endblock %}
