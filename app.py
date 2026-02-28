@@ -214,3 +214,12 @@ if __name__ == "__main__":
 def initialize_db():
     init_db()
     return "✅ Database initialized!"
+
+@app.route("/check-users")
+def check_users():
+    conn = get_db()
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor.execute("SELECT username, telegram_id, preferences FROM users")
+    users = cursor.fetchall()
+    conn.close()
+    return jsonify([dict(u) for u in users])
