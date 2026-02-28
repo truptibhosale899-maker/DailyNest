@@ -1,14 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Preferences{% endblock %}
-
 {% block content %}
 <div class="pref-wrapper">
     <div class="pref-card">
         <h1 class="auth-title">Your Preferences</h1>
         <p class="auth-subtitle">Choose the news categories you care about and optionally connect your Telegram.</p>
-
         <form method="POST" action="{{ url_for('preferences') }}" class="auth-form">
-
             <!-- ── CATEGORY SELECTION ─────────── -->
             <div class="form-group">
                 <label>News Categories <span class="text-muted">(select at least one)</span></label>
@@ -38,10 +35,28 @@
                     {% endfor %}
                 </div>
             </div>
-
             <!-- ── TELEGRAM ───────────────────── -->
             <div class="form-group">
                 <label for="telegram_id">Telegram Chat ID <span class="text-muted">(optional)</span></label>
+
+                <!-- Step 1: Start the bot -->
+                <div style="background: #1a1a2e; border: 1px solid #7c3aed; border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+                    <p style="margin: 0 0 10px 0; font-size: 0.9rem; color: #ccc;">
+                        <strong>Step 1:</strong> First click below to start the DailyNest Bot on Telegram:
+                    </p>
+                    <a href="https://t.me/DailyNestBot" target="_blank"
+                       style="display: inline-block; background: #7c3aed; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem;">
+                        🚀 Open DailyNest Bot on Telegram
+                    </a>
+                    <p style="margin: 10px 0 0 0; font-size: 0.85rem; color: #aaa;">
+                        Press <strong>START</strong> in Telegram, then the bot will send you your Chat ID automatically.
+                    </p>
+                </div>
+
+                <!-- Step 2: Enter ID -->
+                <p style="font-size: 0.9rem; color: #ccc; margin-bottom: 6px;">
+                    <strong>Step 2:</strong> Enter your Telegram Chat ID below:
+                </p>
                 <div class="input-wrap">
                     <i data-feather="send" class="input-icon"></i>
                     <input
@@ -54,19 +69,15 @@
                     />
                 </div>
                 <small class="help-text">
-                    To find your Telegram ID: message <strong>@userinfobot</strong> on Telegram.
-                    Run the bot script to receive news alerts.
+                    Can't find your ID? Message <strong>@userinfobot</strong> on Telegram and it will reply with your Chat ID.
                 </small>
             </div>
-
             <button type="submit" class="btn btn-primary btn-full">Save Preferences</button>
             <a href="{{ url_for('dashboard') }}" class="btn btn-ghost btn-full mt-sm">Cancel</a>
         </form>
     </div>
 </div>
-
 {% endblock %}
-
 {% block scripts %}
 <script>
     function toggleLabel(checkbox) {
