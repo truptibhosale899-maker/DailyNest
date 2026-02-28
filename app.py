@@ -15,9 +15,9 @@ import psycopg2.extras
 app = Flask(__name__)
 app.secret_key = "dailynest_secret_key_change_in_production"
 
-NEWS_API_KEY = os.environ.get("NEWS_API_KEY", "YOUR_NEWSAPI_KEY_HERE")
+NEWS_API_KEY = os.environ.get("NEWS_API_KEY", "4d785e694a43460c8b5acbd9e538ce2e")
 NEWS_API_URL = "https://newsapi.org/v2/"
-DATABASE_URL = os.environ.get("DATABASE_URL", "YOUR_DATABASE_URL_HERE")
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://dailynest_user:iQYbbTddM6bBY4KfLy1tDW5296PZi5k2@dpg-d6h9ee450q8c73af3jsg-a.oregon-postgres.render.com/dailynest")
 
 CATEGORIES = ["technology", "sports", "business", "entertainment", "health", "science", "general"]
 
