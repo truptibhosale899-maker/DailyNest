@@ -207,7 +207,7 @@ def run_bot():
             loop.close()
 
         thread = threading.Thread(target=run_in_thread)
-        thread.daemon = True
+        thread.daemon = False
         thread.start()
 
         return "✅ Bot running in background! Check Telegram soon!"
