@@ -196,15 +196,23 @@ def api_news(category):
 @app.route("/run-bot")
 def run_bot():
     try:
+        import threading
         import asyncio
         from bot.news_bot import broadcast_news
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        loop.run_until_complete(broadcast_news())
-        loop.close()
-        return "✅ Bot ran successfully! Check your Telegram!"
+
+        def run_in_thread():
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(broadcast_news())
+            loop.close()
+
+        thread = threading.Thread(target=run_in_thread)
+        thread.daemon = True
+        thread.start()
+
+        return "✅ Bot running in background! Check Telegram soon!"
     except Exception as e:
-        return f"❌ Bot failed: {str(e)}", 500
+        return f"❌ Bot failed to start: {str(e)}", 500
 
 if __name__ == "__main__":
     init_db()
